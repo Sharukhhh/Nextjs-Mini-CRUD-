@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import {useRouter} from 'next/navigation'
 import { showErrorAlert, showSuccessAlert } from '@/utils/alertUtils';
 
-const page = () => {
+const Page = () => {
   const [title , setTitle] = useState('');
   const [description , setDescription] = useState('');
   const [disabled , setDisabled] = useState(false);
@@ -72,4 +72,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
