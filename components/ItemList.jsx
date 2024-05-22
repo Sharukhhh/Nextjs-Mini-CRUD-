@@ -63,7 +63,7 @@ const ItemList =  async () => {
                 <button onClick={() => removeItem(item?._id)} className='text-red-500 hover:scale-90'>
                     <HiOutlineTrash  size={24}/>
                 </button>
-                <Link href={`/add/${item?._id}`} >
+                <Link href={`/editItem/${item?._id}`} >
                     <HiPencilAlt size={24} className='hover:scale-90'/>
                 </Link>
             </div>
