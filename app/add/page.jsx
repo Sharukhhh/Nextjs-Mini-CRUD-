@@ -1,12 +1,14 @@
 'use client';
-
-import axios from 'axios';
 import React, { useState } from 'react'
+import {useRouter} from 'next/navigation'
+import { showErrorAlert, showSuccessAlert } from '@/utils/alertUtils';
 
 const page = () => {
   const [title , setTitle] = useState('');
   const [description , setDescription] = useState('');
   const [disabled , setDisabled] = useState(false);
+  const router = useRouter();
+
 
   const handleSubmit = async (e) => {
     try {
@@ -14,23 +16,34 @@ const page = () => {
       setDisabled((prev) => !prev);
 
       if(!title || !description) {
-        return alert('Fill the fields');
+        showErrorAlert('Oops...!' , 'Fill all the fields!');
+        return;
       }
   
       if(title.trim() === '' || description.trim('') === '') {
-        return alert('Invalid');
+        showErrorAlert('Oops...!' , 'Invalid!');
+        return;
       }
 
-      const response = await axios.post('http://localhost:3000/api/items' , {title , description});
-      if(response.data.message) {
-        return alert('Item saved');
+      const response = await fetch('http://localhost:3000/api/items' , {
+        method: 'POST',
+        headers : {
+          'Content-type': 'application/json'
+        },
+        body : JSON.stringify({title , description})
+      });
+
+      if(response.ok) {
+        showSuccessAlert('Saved' , 'Item Saved Successfully');
+        router.push('/');
       }
     } catch (error) {
-      console.log('error while submitting', error);
-      alert("Error occured", error);
+      showErrorAlert('Error' , 'An Error occured while saving');
 
     } finally {
       setDisabled((prev) => !prev);
+      setDescription('')
+      setTitle('')
     }
   }
 
@@ -49,7 +62,9 @@ const page = () => {
             />
 
             <button disabled={disabled}
-            type='submit' className='bg-green-600 font-bold text-white py-3 px-6 w-fit hover:scale-110'>
+            type='submit' className={`font-bold text-white py-3 px-6 w-fit ${
+              disabled ? 'bg-gray-500 cursor-not-allowed' : 'bg-green-600 hover:scale-110'
+            }`}>
               Save
             </button>
         </form>
